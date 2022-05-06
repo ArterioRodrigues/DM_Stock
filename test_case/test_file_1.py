@@ -68,14 +68,6 @@ predictions = scaler.inverse_transform(predictions)
 
 rmse = np.sqrt(np.mean( predictions - y_test)**2)
 
-plt.plot(predictions, color = 'r', label = 'predictions')
-plt.plot(y_test, color = 'b', label = 'y_test')
-
-plt.legend()
-plot = plt.show()
-
-plt.savefig("../plots/prediction_ytest.png")
-
 print(rmse)
 
 train = data[:train_size]
@@ -90,9 +82,39 @@ plt.ylabel('Close Price USD ($)', fontsize = 18)
 plt.plot(train["Close"])
 plt.plot(valid[['Close', 'Predictions']])
 plt.legend(['Train', 'Val', 'Predicitons'], loc = 'lower right')
-plt.show()
 plt.savefig("../plots/visualize.png")
 
 print(valid)
 
 #Get the quote 
+
+apple = yf.Ticker("AAPL")
+df = apple.history(start ='2012-01-01', end ='2019-12-17')
+
+new_df = df.filter(['Close'])
+last_60_days = new_df[-60:].values
+last_120_days = new_df[-120:-60].values
+
+last_60_days_scaled = scaler.transform(last_60_days)
+last_120_days_scaled = scaler.transform(last_120_days)
+
+x_test = []
+x_test.append(last_60_days_scaled)
+x_test.append(last_120_days_scaled)
+
+x_test = np.array(x_test)
+
+x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1], 1))
+
+pred_price = model.predict(x_test)
+
+pred_price = scaler.inverse_transform(pred_price)
+
+print(pred_price)
+
+df = apple.history(start ='2019-12-18', end = '2019-12-19')
+
+print(df['Close'])
+
+
+

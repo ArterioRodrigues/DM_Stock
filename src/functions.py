@@ -41,7 +41,7 @@ def build_model(dataset, train_size, test_case_size):
     x_train = np.reshape(x_train,(x_train.shape[0],x_train.shape[1],1))
 
     model = tf.keras.Sequential()
-    model.add(tf.keras.layers.LSTM(50, return_sequences=True, input_shape = (x_train.shape[1],1)))
+    model.add(tf.keras.layers.LSTM(50, return_sequences=True, activation = "relu", input_shape = (x_train.shape[1],1)))
     model.add(tf.keras.layers.LSTM(50, return_sequences=False))
     model.add(tf.keras.layers.Dense(25))
     model.add(tf.keras.layers.Dense(1))
@@ -87,35 +87,26 @@ def Visualize(data, predictions, train_size):
     plt.show()
     plt.savefig("../plots/visualize.png")
 
+def qoute(model, ticker, scaler, num_pred, test_case_size, usr_start = '2021-01-01', usr_end = '2022-01-01'):
+    ticker = yf.Ticker(ticker)
+    df = ticker.history(start = '2000-01-01')
 
-def validate(date_text):
-    try:
-        datetime.datetime.strptime(date_text, '%Y-%m-%d')
-    except ValueError:
-        raise ValueError("Incorrect data format, should be YYYY-MM-DD")
+    df = df.filter(['Close'])
+    day = []
+    for i in range(num_pred):
+        day.append(scaler.transform(df[-test_case_size-i:-i].values))
 
-def test_values(ticker, start_time, size, test_case_size):
-    check = FALSE
+    x_test = []
 
-    for i in ticker:
-        if i.isdigit():
-            print('Error bad ticker')
-            check = TRUE
-    
-    while(check):
-        ticker = input('Enter a new ticker: ')
-        for i in ticker:
-            if i.isdigit():
-                print('Error bad ticker')
-                check = FALSE
-        if(not check):
-            check = TRUE
-        else:
-            check = FALSE
-            
-    validate(start_time)
+    for i in df:
+        x_test.append(i)
+
+    x_test = np.array(x_test)
+    x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1], 1))
+
+    pred_price = model.predict(x_test)
+    pred_price = scaler.inverse_transform(pred_price)
+
+    print(pred_price)
 
 
-
-
-    
