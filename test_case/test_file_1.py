@@ -11,7 +11,7 @@ from sklearn.preprocessing import MinMaxScaler
 
 
 msft = yf.Ticker("MSFT")
-df = msft.history(start ='2021-01-01')
+df = msft.history(start ='2000-01-01')
 df.to_csv('../CSV/msft.csv')
 
 df = pd.read_csv('../CSV/msft.csv')
@@ -62,7 +62,6 @@ for i in range(60, len(test_data)):
 x_test = np.array(x_test)
 x_test = np.reshape(x_test,(x_test.shape[0],x_test.shape[1],1))
 
-
 predictions = model.predict(x_test)
 predictions = scaler.inverse_transform(predictions)
 
@@ -82,9 +81,8 @@ plt.ylabel('Close Price USD ($)', fontsize = 18)
 plt.plot(train["Close"])
 plt.plot(valid[['Close', 'Predictions']])
 plt.legend(['Train', 'Val', 'Predicitons'], loc = 'lower right')
+plt.show()
 plt.savefig("../plots/visualize.png")
-
-print(valid)
 
 #Get the quote 
 
