@@ -1,6 +1,7 @@
 # Data Mining Stock
 
 ### Table of Contents
+
 1. [Preview](#preview)
 2. [Description](#description)
 3. [Installation](#installation)
@@ -9,7 +10,6 @@
 ## Preview
 
 ## Description
-
 
 ## Installation
 
