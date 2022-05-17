@@ -87,26 +87,4 @@ def Visualize(data, predictions, train_size):
     plt.show()
     plt.savefig("../plots/visualize.png")
 
-def qoute(model, ticker, scaler, num_pred, test_case_size, usr_start = '2021-01-01', usr_end = '2022-01-01'):
-    ticker = yf.Ticker(ticker)
-    df = ticker.history(start = '2000-01-01')
-
-    df = df.filter(['Close'])
-    day = []
-    for i in range(num_pred):
-        day.append(scaler.transform(df[-test_case_size-i:-i].values))
-
-    x_test = []
-
-    for i in df:
-        x_test.append(i)
-
-    x_test = np.array(x_test)
-    x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1], 1))
-
-    pred_price = model.predict(x_test)
-    pred_price = scaler.inverse_transform(pred_price)
-
-    print(pred_price)
-
 
